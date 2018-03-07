@@ -1,8 +1,9 @@
 /*
- * Userspace/Kernelspace common API for BeagleLogic
+ * Userspace/Kernelspace common API for BeagleDVB-SPI
  * ioctl commands and enumeration of states
  *
  * Copyright (C) 2014-17 Kumar Abhishek <abhishek@theembeddedkitchen.net>
+ * Copyright (C) 2017 R Colomban
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -10,10 +11,10 @@
  * option) any later version.
  */
 
-#ifndef BEAGLELOGIC_H_
-#define BEAGLELOGIC_H_
+#ifndef BEAGLEDVBSPI_H_
+#define BEAGLEDVBSPI_H_
 
-enum beaglelogic_states {
+enum beagledvbspi_states {
 	STATE_BL_DISABLED,	/* Powered off (at module start) */
 	STATE_BL_INITIALIZED,	/* Powered on */
 	STATE_BL_MEMALLOCD,	/* Buffers allocated */
@@ -23,28 +24,9 @@ enum beaglelogic_states {
 	STATE_BL_ERROR   	/* Buffer overrun */
 };
 
-enum beaglelogic_triggerflags {
-	BL_TRIGGERFLAGS_ONESHOT = 0,
-	BL_TRIGGERFLAGS_CONTINUOUS
-};
-
-enum beaglelogic_sampleunit {
-	BL_SAMPLEUNIT_16_BITS = 0,
-	BL_SAMPLEUNIT_8_BITS
-};
-
-/* ioctl calls that can be issued on /dev/beaglelogic */
+/* ioctl calls that can be issued on /dev/beagledvbspi */
 
 #define IOCTL_BL_GET_VERSION        _IOR('k', 0x20, u32)
-
-#define IOCTL_BL_GET_SAMPLE_RATE    _IOR('k', 0x21, u32)
-#define IOCTL_BL_SET_SAMPLE_RATE    _IOW('k', 0x21, u32)
-
-#define IOCTL_BL_GET_SAMPLE_UNIT    _IOR('k', 0x22, u32)
-#define IOCTL_BL_SET_SAMPLE_UNIT    _IOW('k', 0x22, u32)
-
-#define IOCTL_BL_GET_TRIGGER_FLAGS  _IOR('k', 0x23, u32)
-#define IOCTL_BL_SET_TRIGGER_FLAGS  _IOW('k', 0x23, u32)
 
 #define IOCTL_BL_GET_CUR_INDEX      _IOR('k', 0x24, u32)
 #define IOCTL_BL_CACHE_INVALIDATE    _IO('k', 0x25)
@@ -60,4 +42,4 @@ enum beaglelogic_sampleunit {
 #define IOCTL_BL_START               _IO('k', 0x29)
 #define IOCTL_BL_STOP                _IO('k', 0x2A)
 
-#endif /* BEAGLELOGIC_H_ */
+#endif /* BEAGLEDVBSPI_H_ */
