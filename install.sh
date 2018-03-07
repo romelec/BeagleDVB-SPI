@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# Install script for BeagleLogic from git repository
+# Install script for BeagleDVB-SPI from git repository
 #
 # This script is meant to be executed in either a chroot environment (used while
-# building the BeagleLogic system image) or after doing a git clone of the
-# BeagleLogic repository.
+# building the BeagleDVB-SPI system image) or after doing a git clone of the
+# BeagleDVB-SPI repository.
 #
 # This script only supports the BeagleBone Debian image which have all the
 # required dependencies
 
 DIR=$(cd `dirname $0` && pwd -P)
-log="beaglelogic:"
+log="beagledvbspi:"
 
-# The kernel looks for beaglelogic-pru0-fw and beaglelogic-pru1-fw in /lib/firmware
-# The firmware is installed as 'beaglelogic-pru0-fw' and 'beaglelogic-pru1-logic'
-# beaglelogic-pru1-fw is further symlinked to beaglelogic-pru1-logic
+# The kernel looks for beagledvbspi-pru0-fw and beagledvbspi-pru1-fw in /lib/firmware
+# The firmware is installed as 'beagledvbspi-pru0-fw' and 'beagledvbspi-pru1-logic'
+# beagledvbspi-pru1-fw is further symlinked to beagledvbspi-pru1-logic
 # This arrangement enables running PRUDAQ by simply updating the symlink and
-# reloading the beaglelogic kernel module
+# reloading the beagledvbspi kernel module
 install_pru_firmware () {
 	# Required for compiling the firmware, see firmware/Makefile
 	if [ ! -d /usr/share/ti/cgt-pru/bin ] ; then
@@ -29,55 +29,36 @@ install_pru_firmware () {
 	make
 	make install
 
-	cd "${DIR}/firmware/custom/prudaq"
-	make
-	make install
-
 	if [ ! "x${RUNNING_AS_CHROOT}" = "xyes" ] ; then
 		update-initramfs -u -k `uname -r`
 	fi
 }
 
-create_beaglelogic_group() {
-	echo "${log} Creating beaglelogic group and adding $DEFAULT_USER to it"
+create_beagledvbspi_group() {
+	echo "${log} Creating beagledvbspi group and adding $DEFAULT_USER to it"
 
-	groupadd -f beaglelogic
-	usermod -aG beaglelogic ${DEFAULT_USER}
+	groupadd -f beagledvbspi
+	usermod -aG beagledvbspi ${DEFAULT_USER}
 }
 
-
-# Udev rules required to allow the default user to modify BeagleLogic
+# Udev rules required to allow the default user to modify BeagleDVB-SPI
 # sysfs attributes without requiring root permissions
 install_udev_rules() {
 	echo "${log} Installing udev rules"
-	cp -v "${DIR}/scripts/90-beaglelogic.rules" "/etc/udev/rules.d/"
+	cp -v "${DIR}/scripts/90-beagledvbspi.rules" "/etc/udev/rules.d/"
 }
 
 install_systemd_service() {
 	echo "${log} Installing systemd startup service"
-	cp -v "${DIR}/scripts/beaglelogic" "/etc/default/beaglelogic"
-	cp -v "${DIR}/scripts/beaglelogic.service" "/lib/systemd/system/beaglelogic.service"
-	cp -v "${DIR}/scripts/beaglelogic-startup.service" "/lib/systemd/system/beaglelogic-startup.service"
-	chown root:root "/lib/systemd/system/beaglelogic.service"
-	chown root:root "/lib/systemd/system/beaglelogic-startup.service"
-	sed -i -e "s:DIR:${DIR}:" "/lib/systemd/system/beaglelogic.service"
-	sed -i -e "s:DIR:${DIR}:" "/lib/systemd/system/beaglelogic-startup.service"
-	systemctl enable beaglelogic.service || true
-	systemctl enable beaglelogic-startup.service || true
-}
-
-install_sigrok() {
-	echo "${log} Installing sigrok and its dependencies"
-	# Installing just sigrok-cli pulls all dependencies
-	apt install -y sigrok-cli
-}
-
-install_node_modules() {
-	echo "${log} Installing npm components for beaglelogic-server"
-	cd ${DIR}/server
-	if [ ! -d node_modules ] ; then
-		/bin/su ${DEFAULT_USER} -c "npm install"
-	fi
+	cp -v "${DIR}/scripts/beagledvbspi" "/etc/default/beagledvbspi"
+	cp -v "${DIR}/scripts/beagledvbspi.service" "/lib/systemd/system/beagledvbspi.service"
+	cp -v "${DIR}/scripts/beagledvbspi-startup.service" "/lib/systemd/system/beagledvbspi-startup.service"
+	chown root:root "/lib/systemd/system/beagledvbspi.service"
+	chown root:root "/lib/systemd/system/beagledvbspi-startup.service"
+	sed -i -e "s:DIR:${DIR}:" "/lib/systemd/system/beagledvbspi.service"
+	sed -i -e "s:DIR:${DIR}:" "/lib/systemd/system/beagledvbspi-startup.service"
+	systemctl enable beagledvbspi.service || true
+	systemctl enable beagledvbspi-startup.service || true
 }
 
 update_uboot_uenv_txt() {
@@ -85,8 +66,8 @@ update_uboot_uenv_txt() {
 		echo "${log} Updating uEnv.txt"
 		sed -i -e "s:#disable_uboot_overlay_video:disable_uboot_overlay_video:" "/boot/uEnv.txt"
 		sed -i -e "s:uboot_overlay_pru:#uboot_overlay_pru:" "/boot/uEnv.txt"
-		echo '#Load BeagleLogic Cape' >> "/boot/uEnv.txt"
-		echo 'uboot_overlay_pru=/lib/firmware/beaglelogic-00A0.dtbo' >> "/boot/uEnv.txt"
+		echo '#Load BeagleDVB-SPI Cape' >> "/boot/uEnv.txt"
+		echo 'uboot_overlay_pru=/lib/firmware/beagledvbspi-00A0.dtbo' >> "/boot/uEnv.txt"
 	fi
 }
 
@@ -99,7 +80,7 @@ display_success_message() {
 }
 
 
-if [ "x$1" = "x--upgrade"] ; then
+if [ "x$1" = "x--upgrade" ] ; then
 	UPGRADING="yes"
 else
 	UPGRADING="no"
@@ -123,14 +104,13 @@ else
 fi
 
 install_pru_firmware
-if [ "x${UPGRADING}" = "xno"] ; then
-	create_beaglelogic_group
+if [ "x${UPGRADING}" = "xno" ] ; then
+	create_beagledvbspi_group
 fi
 install_udev_rules
 install_systemd_service
-install_node_modules
-install_sigrok
-if [ "x${UPGRADING}" = "xno"] ; then
+
+if [ "x${UPGRADING}" = "xno" ] ; then
 	update_uboot_uenv_txt
 fi
 display_success_message

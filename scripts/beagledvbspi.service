@@ -1,12 +1,12 @@
 [Unit]
-Description=BeagleLogic Logic Analyzer
+Description=BeagleDVB-SPI Interface
 ConditionPathExists=|DIR
 
 [Service]
 WorkingDirectory=DIR/server
-EnvironmentFile=/etc/default/beaglelogic
+EnvironmentFile=/etc/default/beagledvbspi
 ExecStart=/usr/bin/nodejs 'DIR/server/app.js'
-SyslogIdentifier=beaglelogic
+SyslogIdentifier=beagledvbspi
 User=1000
 
 [Install]
