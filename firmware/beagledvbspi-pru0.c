@@ -1,9 +1,10 @@
 /*
- * PRU0 Firmware for BeagleLogic
+ * PRU0 Firmware for BeagleDVB-SPI
  *
  * Copyright (C) 2014-17 Kumar Abhishek <abhishek@theembeddedkitchen.net>
+ * Copyright (C) 2017 R Colomban
  *
- * This file is a part of the BeagleLogic project
+ * This file is a part of the BeagleDVB-SPI project
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -55,6 +56,7 @@ struct capture_context {
 	uint32_t cmd;           // Command from Linux host to us
 	uint32_t resp;          // Response code
 
+    // Options below are not used
 	uint32_t samplediv;     // Sample rate = (100 / samplediv) MHz
 	uint32_t sampleunit;    // 0 = 16-bit, 1 = 8-bit
 	uint32_t triggerflags;  // 0 = one-shot, 1 = continuous sampling
@@ -90,10 +92,6 @@ int configure_capture() {
 	/* Verify magic bytes */
 	if (pru_other_read_reg(0) != FW_MAGIC)
 		return -1;
-
-	/* All clear, now write the configuration bits */
-	pru_other_write_reg(14, cxt.samplediv);
-	pru_other_write_reg(15, cxt.sampleunit);
 
 	/* Resume over the HALT instruction, give it some time to configure */
 	resume_other_pru();

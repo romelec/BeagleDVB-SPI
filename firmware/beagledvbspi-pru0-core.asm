@@ -1,15 +1,16 @@
-;* PRU1 Firmware for BeagleLogic
+;* PRU1 Firmware for BeagleDVB-SPI
 ;*
 ;* Copyright (C) 2014 Kumar Abhishek <abhishek@theembeddedkitchen.net>
+;* Copyright (C) 2017 R Colomban
 ;*
-;* This file is a part of the BeagleLogic project
+;* This file is a part of the BeagleDVB-SPI project
 ;*
 ;* This program is free software; you can redistribute it and/or modify
 ;* it under the terms of the GNU General Public License version 2 as
 ;* published by the Free Software Foundation.
 
 ;* Import all symbols from the C file
-	.cdecls "beaglelogic-pru0.c"
+	.cdecls "beagledvbspi-pru0.c"
 
 ;* C declaration:
 ;* void run(struct capture_context *ctx, u32 trigger_flags)

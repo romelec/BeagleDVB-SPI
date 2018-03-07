@@ -1,5 +1,5 @@
 /*
- * Resource Table for PRU0 firmware of BeagleLogic
+ * Resource Table for PRU0 firmware of BeagleDVB-SPI
  * Copyright (C) 2017 Kumar Abhishek <abhishek@theembeddedkitchen.net>
  *
  * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
