@@ -1,4 +1,4 @@
-# Makefile for BeagleLogic PRU firmware
+# Makefile for BeagleDVB-SPI PRU firmware
 # Based on Makefile provided by TI examples
 #
 # PRU_CGT environment variable must point to the TI PRU code gen tools directory. E.g.:
@@ -53,8 +53,8 @@ CFLAGS=-v3 -O2 --display_error_number --endian=little --hardware_mac=on --obj_di
 #Linker flags (Defined in 'PRU Optimizing C/C++ Compiler User's Guide)
 LFLAGS=--reread_libs --warn_sections --stack_size=$(STACK_SIZE) --heap_size=$(HEAP_SIZE)
 
-TARGET_PRU0=$(GEN_DIR)/beaglelogic-pru0.out
-TARGET_PRU1=$(GEN_DIR)/beaglelogic-pru1.out
+TARGET_PRU0=$(GEN_DIR)/beagledvbspi-pru0.out
+TARGET_PRU1=$(GEN_DIR)/beagledvbspi-pru1.out
 
 TARGETS=$(TARGET_PRU0) $(TARGET_PRU1)
 
@@ -62,9 +62,9 @@ MAP=$(GEN_DIR)/$(PROJ_NAME).map
 
 SOURCES=main.c
 
-OBJECTS_PRU0=$(GEN_DIR)/beaglelogic-pru0.object $(GEN_DIR)/beaglelogic-pru0-core.object
+OBJECTS_PRU0=$(GEN_DIR)/beagledvbspi-pru0.object $(GEN_DIR)/beagledvbspi-pru0-core.object
 
-OBJECTS_PRU1=$(GEN_DIR)/beaglelogic-pru1.object $(GEN_DIR)/beaglelogic-pru1-core.object
+OBJECTS_PRU1=$(GEN_DIR)/beagledvbspi-pru1.object $(GEN_DIR)/beagledvbspi-pru1-core.object
 
 all: printStart $(TARGETS) printEnd
 
@@ -137,13 +137,13 @@ deploy: deploy-pru0 deploy-pru1
 deploy-pru0: $(TARGET_PRU0)
 	@echo ''
 	@echo 'Installing PRU0 firmware to /lib/firmware'
-	@cp -v $(TARGET_PRU0) /lib/firmware/beaglelogic-pru0-fw
+	@cp -v $(TARGET_PRU0) /lib/firmware/beagledvbspi-pru0-fw
 	@echo ''
 
 deploy-pru1: $(TARGET_PRU1)
 	@echo ''
 	@echo 'Installing PRU1 firmware to /lib/firmware'
-	@cp -v $(TARGET_PRU1) /lib/firmware/beaglelogic-pru1-logic
-	@echo 'Symlinking beaglelogic-pru1-logic to beaglelogic-pru1-fw'
-	@ln -sfv /lib/firmware/beaglelogic-pru1-logic /lib/firmware/beaglelogic-pru1-fw
+	@cp -v $(TARGET_PRU1) /lib/firmware/beagledvbspi-pru1-logic
+	@echo 'Symlinking beagledvbspi-pru1-logic to beagledvbspi-pru1-fw'
+	@ln -sfv /lib/firmware/beagledvbspi-pru1-logic /lib/firmware/beagledvbspi-pru1-fw
 	@echo ''

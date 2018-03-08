@@ -1,0 +1,10 @@
+[Unit]
+Description=BeagleDVB-SPI Startup Script
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash DIR/scripts/beagledvbspi-startup.sh
+
+[Install]
+WantedBy=multi-user.target
