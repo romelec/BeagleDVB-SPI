@@ -11,8 +11,6 @@ Directories:
 
 * firmware: PRU Firmware
 * kernel: Device Tree overlay source and kernel module source and Makefile.
-**The default BeagleBone kernel v4.9.31-ti-r41 and above ship with BeagleDVB-SPI support.
-You can verify it using the command** ```modinfo beagledvbspi```
 * cape: The cape design files done with KiCAD
 
 * parsing: An application to get the data and parse it to have usable TS stream
